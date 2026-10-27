@@ -1,0 +1,43 @@
+import fs from "node:fs/promises";
+import assert from "node:assert/strict";
+import {createServer} from "vite";
+import {chromium} from "playwright";
+const qa="qa-artifacts/aura-originals-20261016",suffix=process.env.AURA_QA_SUFFIX??"";
+const server=await createServer({configFile:false,root:process.cwd(),logLevel:"error",server:{host:"127.0.0.1",port:5189,strictPort:true}});await server.listen();let browser;
+try{
+ browser=await chromium.launch({channel:"chrome",headless:true,args:["--autoplay-policy=no-user-gesture-required"]});const context=await browser.newContext({viewport:{width:1512,height:1100}});const page=await context.newPage();const errors=[],requests=[];
+ page.on("pageerror",e=>errors.push(e.message));page.on("request",r=>{if(r.url().includes("/private-assets/aura/"))requests.push(r.url());});
+ await page.goto("http://127.0.0.1:5189/");await page.getByText("All changes saved",{exact:true}).waitFor();assert.equal(requests.length,0,"Aura must not load at startup");
+ const read=()=>page.evaluate(async()=>{const {loadLocal}=await import("/src/io/persistence.ts");return await loadLocal();});const original=await read();
+ await page.getByText("Aura from-scratch · opt-in private draft",{exact:true}).click();
+ assert.equal(await page.getByRole("button",{name:"Create new Aura original · 80 bars",exact:true}).isDisabled(),true);
+ await page.getByLabel("Accept new Aura session replacement").check();
+ await page.getByRole("button",{name:"Create new Aura original · 80 bars",exact:true}).click();
+ await page.getByRole("status").filter({hasText:"New 80-bar Aura original draft created"}).waitFor();await page.getByText("All changes saved",{exact:true}).waitFor();
+ const created=await read();assert.equal(created.auraOriginal.version,1);assert.equal(created.sections.reduce((n,s)=>n+s.bars,0),80);assert.equal(created.tagEnabled,false);assert.equal(created.vocalEvents.length,0);
+ assert.equal(requests.filter(u=>u.endsWith(".wav")).length,4);
+ await page.getByRole("button",{name:"Play",exact:true}).waitFor(); // no autoplay
+ await page.getByRole("button",{name:"Lock Aura foreground",exact:true}).click();await page.getByText("All changes saved",{exact:true}).waitFor();const locked=await read();
+ await page.getByLabel("Aura palette",{exact:true}).selectOption("synth-strings");await page.getByRole("button",{name:"Swap Aura palette · keep notes / locks",exact:true}).click();
+ await page.getByRole("status").filter({hasText:"Aura palette changed"}).waitFor();await page.getByText("All changes saved",{exact:true}).waitFor();const swapped=await read();
+ for(let i=0;i<3;i++)assert.deepEqual(swapped.candidates[i].tracks.map(t=>t.notes),locked.candidates[i].tracks.map(t=>t.notes));assert.deepEqual(swapped.candidates[0].tracks[0],locked.candidates[0].tracks[0]);
+ await page.getByRole("button",{name:"Undo",exact:true}).click();await page.getByText("All changes saved",{exact:true}).waitFor();assert.deepEqual(await read(),locked);
+ await page.getByRole("button",{name:"Undo",exact:true}).click();await page.getByText("All changes saved",{exact:true}).waitFor();assert.deepEqual(await read(),created);
+ await page.getByRole("button",{name:"Undo",exact:true}).click();await page.getByText("All changes saved",{exact:true}).waitFor();assert.deepEqual(await read(),original);
+ await page.getByRole("button",{name:"Redo",exact:true}).click();await page.getByText("All changes saved",{exact:true}).waitFor();assert.deepEqual(await read(),created);
+ await page.getByRole("button",{name:"Play",exact:true}).click();await page.getByRole("button",{name:"Pause",exact:true}).waitFor();await page.getByRole("button",{name:"Stop",exact:true}).click();await page.getByRole("button",{name:"Play",exact:true}).waitFor();
+ await page.getByRole("button",{name:"Browse curated private Aura sources",exact:true}).click();
+ await page.getByLabel("Aura source role",{exact:true}).selectOption("melody");
+ await page.getByLabel("Aura playable source",{exact:true}).selectOption("aura-keys-esoteric");
+ const beforePicker=await read();
+ await page.getByRole("button",{name:"Apply Aura source · notes unchanged",exact:true}).click();
+ await page.getByRole("status").filter({hasText:"Private Aura source applied"}).waitFor();await page.getByText("All changes saved",{exact:true}).waitFor();
+ const afterPicker=await read();assert.deepEqual(afterPicker.candidates[0].tracks.map(t=>t.notes),beforePicker.candidates[0].tracks.map(t=>t.notes));assert.equal(afterPicker.candidates[0].tracks[0].instrument,"aura-keys-esoteric");
+ await page.getByRole("button",{name:"Instrument",exact:true}).click(); assert.equal(await page.getByLabel("Root MIDI",{exact:true}).inputValue(),"72");
+ await page.screenshot({path:qa+"/aura-ui"+suffix+".png",fullPage:true});assert.deepEqual(errors,[]);
+ const missingContext=await browser.newContext();const missing=await missingContext.newPage();await missing.route("**/private-assets/aura/playable-catalog-v1.json",r=>r.fulfill({status:404,body:"missing"}));await missing.goto("http://127.0.0.1:5189/");await missing.getByText("All changes saved",{exact:true}).waitFor();
+ const beforeMissing=await missing.evaluate(async()=>{const {loadLocal}=await import("/src/io/persistence.ts");return await loadLocal();});
+ await missing.getByText("Aura from-scratch · opt-in private draft",{exact:true}).click();await missing.getByLabel("Accept new Aura session replacement").check();await missing.getByRole("button",{name:"Create new Aura original · 80 bars",exact:true}).click();await missing.getByRole("alert").filter({hasText:"Private Aura catalog missing"}).waitFor();
+ const afterMissing=await missing.evaluate(async()=>{const {loadLocal}=await import("/src/io/persistence.ts");return await loadLocal();});assert.deepEqual(afterMissing,beforeMissing);await missingContext.close();
+ await fs.writeFile(qa+"/browser-ui"+suffix+".json",JSON.stringify({browser:await browser.version(),errors,checks:["zero Aura startup downloads","replacement acknowledgment required","explicit 80-bar generation","four selected WAV downloads only","no autoplay","locked palette swap preserves notes","Undo/Redo roundtrip to exact previous session","Play/Stop","individual Aura picker keeps notes","root MIDI 72 shown, not assumed 60","missing catalog leaves session unchanged"],requestedAura:requests},null,2),{flag:"wx"});console.log("Aura UI / swap / locks / Undo / playback verified in isolated context");
+}finally{if(browser)await browser.close();await server.close();}

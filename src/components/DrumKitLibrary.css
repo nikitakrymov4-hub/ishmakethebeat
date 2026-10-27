@@ -1,0 +1,40 @@
+.drum-kit-library {
+  display: grid;
+  gap: 9px;
+  margin: 18px 0;
+  padding: 14px 0;
+  border-top: 1px solid var(--line, #34383d);
+  border-bottom: 1px solid var(--line, #34383d);
+}
+.drum-kit-library h4,
+.drum-kit-library p {
+  margin: 0;
+}
+.drum-kit-library p,
+.drum-kit-library small {
+  font-size: 11px;
+  line-height: 1.5;
+}
+.drum-kit-library label {
+  display: grid;
+  gap: 6px;
+}
+.drum-kit-library audio {
+  width: 100%;
+  min-width: 0;
+  height: 32px;
+}
+.drum-kit-library details {
+  font-size: 11px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.drum-kit-library details p {
+  margin-top: 8px;
+}
+.drum-kit-error {
+  color: #e3a8a8;
+}
+.drum-kit-root-note {
+  color: #d7bc91;
+}

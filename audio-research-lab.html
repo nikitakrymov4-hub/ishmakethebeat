@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Audio research · current engine diagnostic</title>
+    <style>
+      body { background:#121b18; color:#e0e9e1; font:15px system-ui; max-width:880px; margin:36px auto; padding:0 24px; }
+      button { background:#bddcaa; color:#152019; border:0; border-radius:6px; padding:14px 20px; font:inherit; cursor:pointer; }
+      button:disabled { opacity:.5; cursor:wait; }
+      pre { white-space:pre-wrap; line-height:1.6; }
+      a { color:#bddcaa; }
+      audio { width:100%; margin-top:16px; }
+    </style>
+  </head>
+  <body>
+    <h1>Current engine diagnostic</h1>
+    <p>Render the saved original project's 16-bar main section with its existing notes, sounds and processing. This local engineering page makes no musical changes.</p>
+    <p>The section starts with empty effect state. The earlier full-arrangement crop includes decay from its preceding four-bar introduction.</p>
+    <button id="run">Run 16-bar diagnostic</button>
+    <pre id="log" role="status">Ready. Source: deliverables/character/original/project.ish.json</pre>
+    <div id="result"></div>
+    <script type="module" src="/src/audio-research-lab.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,34 @@
+# Dependencies, builds and transient verification outputs
+node_modules/
+dist/
+*.tsbuildinfo
+.DS_Store
+__pycache__/
+*.pyc
+.tmp/
+qa-artifacts/
+*.log
+
+# Local credentials and provider settings
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# User-owned audio, portable projects and research/account evidence
+private-assets/
+deliverables/
+docs/*
+!docs/SETUP.md
+*.wav
+*.mp3
+*.flac
+*.aiff
+*.aif
+*.m4a
+*.ogg
+*.zip
+*.rar
+*.7z
+*.ish.json

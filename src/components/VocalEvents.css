@@ -1,0 +1,232 @@
+.vocal-events {
+  padding: 18px;
+  color: #c6d1bd;
+}
+.vocal-heading,
+.vocal-event-header,
+.vocal-add {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.vocal-heading {
+  justify-content: space-between;
+}
+.vocal-heading h3 {
+  margin: 0 0 6px;
+  font-size: 14px;
+  font-weight: 500;
+}
+.vocal-heading p {
+  margin: 0;
+  color: #91a18a;
+  line-height: 1.5;
+}
+.vocal-modes {
+  display: flex;
+  border: 1px solid #415139;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.vocal-modes button {
+  padding: 8px 12px;
+  border-right: 1px solid #415139;
+}
+.vocal-modes button:last-child {
+  border: 0;
+}
+.vocal-modes button[aria-pressed="true"] {
+  background: #c7e9a5;
+  color: #192316;
+}
+.vocal-help,
+.vocal-field-note {
+  color: #91a18a;
+  font-size: 11px;
+  line-height: 1.6;
+}
+.vocal-empty {
+  padding: 20px;
+  margin: 16px 0;
+  background: #1c241b;
+  border: 1px dashed #425339;
+  border-radius: 7px;
+  line-height: 1.6;
+}
+.vocal-empty h4 {
+  margin: 0 0 8px;
+  font-weight: 500;
+}
+.vocal-empty p {
+  color: #a4b29b;
+  max-width: 68ch;
+}
+.vocal-add {
+  align-items: end;
+  padding: 14px 0;
+  border-top: 1px solid #35422f;
+}
+.vocal-events label {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  font-size: 11px;
+  color: #a5b69b;
+}
+.vocal-events .vocal-check {
+  flex-direction: row;
+  align-items: center;
+}
+.vocal-events input,
+.vocal-events select {
+  width: 100%;
+  font-size: 12px;
+}
+.vocal-events input[type="checkbox"] {
+  width: 14px;
+}
+.vocal-events input:disabled {
+  opacity: 0.5;
+}
+.vocal-add > label {
+  min-width: 130px;
+  flex: 1;
+}
+.vocal-add .secondary {
+  min-height: 36px;
+}
+.vocal-event {
+  margin-top: 18px;
+  border: 1px solid #3f5036;
+  background: #1a2219;
+  border-radius: 7px;
+  padding: 14px;
+}
+.vocal-event-muted {
+  border-color: #333e2d;
+}
+.vocal-event-header {
+  padding-bottom: 14px;
+}
+.vocal-event-state {
+  font-size: 10px;
+  color: #adc993;
+  border: 1px solid #44553a;
+  border-radius: 12px;
+  padding: 3px 8px;
+}
+.vocal-event-muted .vocal-event-state {
+  color: #9aab8f;
+}
+.vocal-event-header button {
+  margin-left: auto;
+}
+.vocal-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 13px;
+  margin: 12px 0;
+}
+.vocal-wide {
+  grid-column: 1 / -1;
+}
+.vocal-align {
+  align-self: center;
+}
+.vocal-field-note {
+  align-self: end;
+  padding: 7px 0;
+}
+.vocal-detail {
+  border-top: 1px solid #34412d;
+  padding: 12px 0 0;
+  margin-top: 14px;
+}
+.vocal-detail > summary {
+  cursor: pointer;
+  font-size: 12px;
+  color: #c7d7ba;
+}
+.vocal-detail > summary span {
+  margin-left: 8px;
+  font-size: 10px;
+  color: #94a587;
+}
+.vocal-detail > .vocal-check {
+  margin-top: 14px;
+}
+.vocal-source-preview {
+  margin-top: 10px;
+}
+.vocal-source-preview summary {
+  font-size: 11px;
+  cursor: pointer;
+  color: #9db58d;
+}
+.vocal-source-preview audio {
+  width: 100%;
+  height: 35px;
+  margin-top: 12px;
+}
+.vocal-source-name,
+.vocal-source-hash {
+  overflow-wrap: anywhere;
+  line-height: 1.6;
+  font-size: 10px;
+}
+.vocal-source-hash {
+  color: #8ea081;
+}
+.vocal-issues {
+  color: #e5b7a1;
+  background: #34251e;
+  padding: 12px 12px 12px 28px;
+  border-radius: 5px;
+  font-size: 11px;
+  line-height: 1.6;
+}
+p.vocal-issues {
+  padding-left: 12px;
+}
+.vocal-notice {
+  color: #b8cea9;
+  background: #24331f;
+  border-radius: 5px;
+  padding: 9px 12px;
+  font-size: 11px;
+  line-height: 1.6;
+}
+.editor-heading .tabs {
+  overflow-x: auto;
+  flex-shrink: 1;
+  min-width: 0;
+}
+.editor-heading .tabs button {
+  flex-shrink: 0;
+}
+@media (max-width: 700px) {
+  .vocal-events {
+    padding: 12px;
+  }
+  .vocal-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .vocal-heading {
+    align-items: start;
+  }
+  .vocal-modes {
+    width: 100%;
+  }
+  .vocal-modes button {
+    flex: 1;
+  }
+  .vocal-add > label {
+    width: 100%;
+    flex-basis: 100%;
+  }
+  .vocal-detail > summary span {
+    display: block;
+    margin: 5px 0 0 14px;
+  }
+}

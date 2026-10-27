@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Sampled drum pitch verification</title>
+    <style>
+      body {
+        font: 15px system-ui;
+        background: #121b18;
+        color: #e0e9e1;
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 0 20px;
+      }
+      button {
+        font: inherit;
+        padding: 12px;
+        background: #bddcaa;
+        border: 0;
+        border-radius: 6px;
+      }
+      pre {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+      a {
+        color: #bddcaa;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Sampled drum pitch verification</h1>
+    <p>
+      Render synthetic known-tone fixtures through the actual export engine.
+      Checks pitch, linked duration, gating, chokes and neutral compatibility.
+      Your saved session is untouched.
+    </p>
+    <button id="run">Run sampled drum pitch checks</button>
+    <pre id="report">Ready. No test has run.</pre>
+    <div id="saved"></div>
+    <script type="module" src="/src/drum-pitch-qa.ts"></script>
+  </body>
+</html>
